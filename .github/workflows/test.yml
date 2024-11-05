@@ -31,11 +31,11 @@ jobs:
         lfs: true
         fetch-depth: 1
 
-    - name: Create PR files
+    - name: Test
       run: |
         DATE_STRING="$(date '+%Y-%m-%d %H:%M:%S')"
-        DATE_STRING_SAFE="${DATE_STRING/:/-}"
-        DATE_STRING_SAFE="${DATE_STRING_SAFE/ /-}"
+        DATE_STRING_SAFE="${DATE_STRING//:/-}"
+        DATE_STRING_SAFE="${DATE_STRING_SAFE// /-}"
         git checkout -b "$DATE_STRING_SAFE"
         rm -rf pr-triggers/*
         mkdir -p pr-triggers
