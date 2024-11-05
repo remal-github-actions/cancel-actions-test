@@ -30,14 +30,22 @@ jobs:
 
     - name: Test
       run: |
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
+
         DATE_STRING="$(date '+%Y-%m-%d %H:%M:%S')"
+
         DATE_STRING_SAFE="${DATE_STRING//:/-}"
         DATE_STRING_SAFE="${DATE_STRING_SAFE// /-}"
+
         git checkout -b "$DATE_STRING_SAFE"
+
         rm -rf pr-triggers/*
         mkdir -p pr-triggers
         echo "$DATE_STRING" > "pr-triggers/$DATE_STRING_SAFE"
+
         git add --all .
         git commit --message="$DATE_STRING"
         git push
+
         gh pr create --fill
