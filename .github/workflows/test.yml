@@ -38,7 +38,7 @@ jobs:
         DATE_STRING_SAFE="${DATE_STRING_SAFE// /-}"
         echo "TOKEN=$DATE_STRING_SAFE" >> $GITHUB_ENV
 
-        git checkout -b "$DATE_STRING_SAFE"
+        git checkout -b "test-$DATE_STRING_SAFE"
 
         rm -rf pr-triggers/*
         mkdir -p pr-triggers
@@ -55,7 +55,7 @@ jobs:
         GH_TOKEN: ${{github.token}}
       run: |
         GH_LOGFILE=$(mktemp)
-        gh pr create --fill |& tee "$GH_LOGFILE"
+        gh pr create --fill --head "test-$DATE_STRING_SAFE" |& tee "$GH_LOGFILE"
 
         RESULT="${PIPESTATUS[0]}"
         if [ "$RESULT" -ne 0 ]; then
