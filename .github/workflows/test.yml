@@ -62,7 +62,7 @@ jobs:
         fi
 
         PR_URL=$(cat "$GH_LOGFILE")
-        echo "pr-url=$PR_URL" >> "$GITHUB_OUTPUT"
+        echo "pr-url=$PR_URL" |& tee --append "$GITHUB_OUTPUT"
 
     - name: Merge PR
       run: |
