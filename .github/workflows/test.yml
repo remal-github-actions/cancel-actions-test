@@ -66,4 +66,4 @@ jobs:
 
     - name: Merge PR
       run: |
-        gh pr merge "${{steps.content.create-pr.pr-url}}" --squash --delete-branch
+        gh pr merge "${{steps.create-pr.outputs.pr-url}}" --squash --delete-branch
