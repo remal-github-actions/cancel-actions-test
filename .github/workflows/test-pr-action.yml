@@ -1,0 +1,19 @@
+name: Test PR Action
+
+on:
+  pull_request: { }
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test-pr-action:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: test-pr-action-${{github.ref}}
+      cancel-in-progress: true
+    steps:
+    - run: |
+        sleep 4m

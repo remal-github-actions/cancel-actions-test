@@ -1,0 +1,46 @@
+name: Test
+
+on:
+  push:
+    paths:
+    - '.github/workflows/test.yml'
+    branches:
+    - 'main'
+  workflow_dispatch: { }
+
+permissions:
+  contents: write
+  pull-requests: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: check-action-secrets
+      cancel-in-progress: true
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        lfs: true
+        fetch-depth: 1
+
+    - name: Create PR files
+      run: |
+        DATE_STRING="$(date '+%Y-%m-%d %H:%M:%S')"
+        DATE_STRING_SAFE="${DATE_STRING/:/-}"
+        DATE_STRING_SAFE="${DATE_STRING_SAFE/ /-}"
+        git checkout -b "$DATE_STRING_SAFE"
+        rm -rf pr-triggers/*
+        mkdir -p pr-triggers
+        echo "$DATE_STRING" > "pr-triggers/$DATE_STRING_SAFE"
+        git add --all .
+        git commit --message="$DATE_STRING"
+        git push
+        gh pr create --fill
