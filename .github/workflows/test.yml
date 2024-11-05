@@ -20,9 +20,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    concurrency:
-      group: check-action-secrets
-      cancel-in-progress: true
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
