@@ -45,7 +45,7 @@ jobs:
     - name: Commit and Push
       uses: remal-github-actions/push-back@v1
       with:
-        githubToken: ${{secrets.GH_TOKEN}}
+        githubToken: ${{env.GH_TOKEN}}
         message: '${{steps.content.outputs.message}}'
 
     - name: Create PR
