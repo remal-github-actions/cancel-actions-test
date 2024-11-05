@@ -64,8 +64,6 @@ jobs:
         PR_URL=$(cat "$GH_LOGFILE")
         echo "pr-url=$PR_URL" |& tee --append "$GITHUB_OUTPUT"
 
-        sleep 10s
-
     - name: Merge PR
       run: |
         gh pr merge "${{steps.create-pr.outputs.pr-url}}" --squash --delete-branch
