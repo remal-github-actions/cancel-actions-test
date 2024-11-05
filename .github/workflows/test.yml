@@ -32,11 +32,11 @@ jobs:
       id: content
       run: |
         DATE_STRING="$(date --utc '+%Y-%m-%d %H:%M:%S')"
-        echo "MESSAGE=$DATE_STRING" >> $GITHUB_ENV
+        echo "message=$DATE_STRING" >> "$GITHUB_OUTPUT"
 
         DATE_STRING_SAFE="${DATE_STRING//:/-}"
         DATE_STRING_SAFE="${DATE_STRING_SAFE// /-}"
-        echo "TOKEN=$DATE_STRING_SAFE" >> $GITHUB_ENV
+        echo "token=$DATE_STRING_SAFE" >> "$GITHUB_OUTPUT"
 
         git checkout -b "test-$DATE_STRING_SAFE"
 
@@ -48,14 +48,14 @@ jobs:
       uses: remal-github-actions/push-back@v1
       with:
         githubToken: ${{secrets.PUSH_BACK_TOKEN}}
-        message: '${{env.MESSAGE}}'
+        message: '${{steps.content.outputs.message}}'
 
     - name: Create PR
       env:
         GH_TOKEN: ${{github.token}}
       run: |
         GH_LOGFILE=$(mktemp)
-        gh pr create --fill --head "test-$DATE_STRING_SAFE" |& tee "$GH_LOGFILE"
+        gh pr create --fill --head "test-${{steps.content.outputs.token}}" |& tee "$GH_LOGFILE"
 
         RESULT="${PIPESTATUS[0]}"
         if [ "$RESULT" -ne 0 ]; then
