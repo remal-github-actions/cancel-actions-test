@@ -28,29 +28,28 @@ jobs:
         lfs: true
         fetch-depth: 1
 
-    - name: Test
-      env:
-        GH_TOKEN: ${{github.token}}
+    - name: Create content
+      id: content
       run: |
-        git config push.autoSetupRemote true
-        git config user.email "actions@github.com"
-        git config user.name "GitHub Actions"
-
         DATE_STRING="$(date --utc '+%Y-%m-%d %H:%M:%S')"
+        echo "MESSAGE=$DATE_STRING" >> $GITHUB_ENV
 
         DATE_STRING_SAFE="${DATE_STRING//:/-}"
         DATE_STRING_SAFE="${DATE_STRING_SAFE// /-}"
+        echo "TOKEN=$DATE_STRING_SAFE" >> $GITHUB_ENV
 
         git checkout -b "$DATE_STRING_SAFE"
 
-        rm -rf pr-triggers/*
-        mkdir -p pr-triggers
-        echo "$DATE_STRING" > "pr-triggers/$DATE_STRING_SAFE"
+    - name: Commit and Push
+      uses: remal-github-actions/push-back@v1
+      with:
+        githubToken: ${{secrets.PUSH_BACK_TOKEN}}
+        message: '${{env.MESSAGE}}'
 
-        git add --all .
-        git commit --message="$DATE_STRING"
-        git push
-
+    - name: Create PR
+      env:
+        GH_TOKEN: ${{github.token}}
+      run: |
         GH_LOGFILE=$(mktemp)
         gh pr create --fill |& tee "$GH_LOGFILE"
 
@@ -58,3 +57,4 @@ jobs:
         if [ "$RESULT" -ne 0 ]; then
           exit "$RESULT"
         fi
+
