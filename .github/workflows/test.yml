@@ -64,7 +64,7 @@ jobs:
         PR_URL=$(cat "$GH_LOGFILE")
         echo "pr-url=$PR_URL" |& tee --append "$GITHUB_OUTPUT"
 
-        sleep 2s
+        sleep 10s
 
     - name: Merge PR
       run: |
