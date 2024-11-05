@@ -8,10 +8,6 @@ on:
     - 'main'
   workflow_dispatch: { }
 
-permissions:
-  contents: write
-  pull-requests: write
-
 defaults:
   run:
     shell: bash
@@ -52,7 +48,7 @@ jobs:
 
     - name: Create PR
       env:
-        GH_TOKEN: ${{github.token}}
+        GH_TOKEN: ${{secrets.PUSH_BACK_TOKEN}}
       run: |
         GH_LOGFILE=$(mktemp)
         gh pr create --fill --head "test-${{steps.content.outputs.token}}" |& tee "$GH_LOGFILE"
