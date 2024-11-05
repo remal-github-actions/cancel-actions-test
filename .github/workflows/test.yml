@@ -51,4 +51,10 @@ jobs:
         git commit --message="$DATE_STRING"
         git push
 
-        gh pr create --fill
+        GH_LOGFILE=$(mktemp)
+        gh pr create --fill |& tee "$GH_LOGFILE"
+
+        RESULT="${PIPESTATUS[0]}"
+        if [ "$RESULT" -ne 0 ]; then
+          exit "$RESULT"
+        fi
