@@ -30,17 +30,19 @@ jobs:
       id: content
       run: |
         DATE_STRING="$(date --utc '+%Y-%m-%d %H:%M:%S')"
-        echo "message=$DATE_STRING" >> "$GITHUB_OUTPUT"
+        echo "message=$DATE_STRING" |& tee --append "$GITHUB_OUTPUT"
 
-        DATE_STRING_SAFE="${DATE_STRING//:/-}"
-        DATE_STRING_SAFE="${DATE_STRING_SAFE// /-}"
-        echo "token=$DATE_STRING_SAFE" >> "$GITHUB_OUTPUT"
+        TOKEN="${DATE_STRING//:/-}"
+        TOKEN="${TOKEN// /-}"
+        echo "token=$TOKEN" |& tee --append "$GITHUB_OUTPUT"
 
-        git checkout -b "test-$DATE_STRING_SAFE"
+        BRANCH="test-$TOKEN"
+        echo "branch=$BRANCH" |& tee --append "$GITHUB_OUTPUT"
+        git checkout -b "$BRANCH"
 
         rm -rf pr-triggers/*
         mkdir -p pr-triggers
-        echo "$DATE_STRING" > "pr-triggers/$DATE_STRING_SAFE"
+        echo "$DATE_STRING" > "pr-triggers/$TOKEN"
 
     - name: Commit and Push
       uses: remal-github-actions/push-back@v1
@@ -52,7 +54,7 @@ jobs:
       id: create-pr
       run: |
         GH_LOGFILE=$(mktemp)
-        gh pr create --fill --head "test-${{steps.content.outputs.token}}" |& tee "$GH_LOGFILE"
+        gh pr create --fill --head "${{steps.content.outputs.branch}}" |& tee "$GH_LOGFILE"
 
         RESULT="${PIPESTATUS[0]}"
         if [ "$RESULT" -ne 0 ]; then
@@ -64,4 +66,4 @@ jobs:
 
     - name: Merge PR
       run: |
-        gh pr merge "${{steps.content.create-pr.pr-url}}"
+        gh pr merge "${{steps.content.create-pr.pr-url}}" --squash --delete-branch
