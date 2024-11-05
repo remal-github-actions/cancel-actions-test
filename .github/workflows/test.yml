@@ -40,6 +40,10 @@ jobs:
 
         git checkout -b "$DATE_STRING_SAFE"
 
+        rm -rf pr-triggers/*
+        mkdir -p pr-triggers
+        echo "$DATE_STRING" > "pr-triggers/$DATE_STRING_SAFE"
+
     - name: Commit and Push
       uses: remal-github-actions/push-back@v1
       with:
