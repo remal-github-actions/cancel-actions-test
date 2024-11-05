@@ -16,6 +16,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{secrets.PUSH_BACK_TOKEN}}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -43,12 +45,11 @@ jobs:
     - name: Commit and Push
       uses: remal-github-actions/push-back@v1
       with:
-        githubToken: ${{secrets.PUSH_BACK_TOKEN}}
+        githubToken: ${{secrets.GH_TOKEN}}
         message: '${{steps.content.outputs.message}}'
 
     - name: Create PR
-      env:
-        GH_TOKEN: ${{secrets.PUSH_BACK_TOKEN}}
+      id: create-pr
       run: |
         GH_LOGFILE=$(mktemp)
         gh pr create --fill --head "test-${{steps.content.outputs.token}}" |& tee "$GH_LOGFILE"
@@ -58,3 +59,9 @@ jobs:
           exit "$RESULT"
         fi
 
+        PR_URL=$(cat "$GH_LOGFILE")
+        echo "pr-url=$PR_URL" >> "$GITHUB_OUTPUT"
+
+    - name: Merge PR
+      run: |
+        gh pr merge "${{steps.content.create-pr.pr-url}}"
