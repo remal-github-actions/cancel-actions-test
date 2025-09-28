@@ -1,3 +1,3 @@
-# cancel-pr-actions-test
+# cancel-actions-test
 
-Testing repository for [cancel-pr-actions](https://github.com/remal-github-actions/cancel-pr-actions).
+Testing repository for [cancel-actions](https://github.com/remal-github-actions/cancel-actions).

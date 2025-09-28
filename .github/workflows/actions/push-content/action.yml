@@ -1,0 +1,43 @@
+inputs:
+  githubToken:
+    required: true
+
+outputs:
+  branch:
+    description: The created branch
+    value: ${{steps.content.outputs.branch}}
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+    with:
+      submodules: recursive
+      lfs: true
+      fetch-depth: 1
+
+  - name: Create content
+    id: content
+    shell: bash
+    run: |
+      DATE_STRING="$(date --utc '+%Y-%m-%d %H:%M:%S')"
+      echo "message=$DATE_STRING" | tee -a "$GITHUB_OUTPUT"
+
+      TOKEN="${DATE_STRING//:/-}"
+      TOKEN="${TOKEN// /-}"
+      echo "token=$TOKEN" | tee -a "$GITHUB_OUTPUT"
+
+      BRANCH="test-$TOKEN"
+      echo "branch=$BRANCH" | tee -a "$GITHUB_OUTPUT"
+      git checkout -b "$BRANCH"
+
+      rm -rf triggers/*
+      mkdir -p triggers
+      echo "$DATE_STRING" > "triggers/$TOKEN"
+
+  - name: Commit and Push
+    uses: remal-github-actions/push-back@v1
+    with:
+      githubToken: ${{inputs.githubToken}}
+      message: '${{steps.content.outputs.message}}'

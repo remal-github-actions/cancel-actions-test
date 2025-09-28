@@ -3,52 +3,31 @@ name: Test
 on:
   push:
     paths:
-    - '.github/workflows/test.yml'
+    - '.github/workflows/**'
     branches:
     - 'main'
   workflow_dispatch: { }
+
+concurrency:
+  group: test-${{github.ref}}
+  cancel-in-progress: false
 
 defaults:
   run:
     shell: bash
 
+env:
+  GH_TOKEN: ${{secrets.PUSH_BACK_TOKEN}}
+
 jobs:
-  test:
+  test-pr:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      GH_TOKEN: ${{secrets.PUSH_BACK_TOKEN}}
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        submodules: recursive
-        lfs: true
-        fetch-depth: 1
-
-    - name: Create content
-      id: content
-      run: |
-        DATE_STRING="$(date --utc '+%Y-%m-%d %H:%M:%S')"
-        echo "message=$DATE_STRING" |& tee --append "$GITHUB_OUTPUT"
-
-        TOKEN="${DATE_STRING//:/-}"
-        TOKEN="${TOKEN// /-}"
-        echo "token=$TOKEN" |& tee --append "$GITHUB_OUTPUT"
-
-        BRANCH="test-$TOKEN"
-        echo "branch=$BRANCH" |& tee --append "$GITHUB_OUTPUT"
-        git checkout -b "$BRANCH"
-
-        rm -rf pr-triggers/*
-        mkdir -p pr-triggers
-        echo "$DATE_STRING" > "pr-triggers/$TOKEN"
-
-    - name: Commit and Push
-      uses: remal-github-actions/push-back@v1
+    - name: Create and push content
+      uses: ./.github/workflows/actions/push-content
       with:
         githubToken: ${{env.GH_TOKEN}}
-        message: '${{steps.content.outputs.message}}'
 
     - name: Create PR
       id: create-pr
@@ -62,7 +41,7 @@ jobs:
         fi
 
         PR_URL=$(cat "$GH_LOGFILE")
-        echo "pr-url=$PR_URL" |& tee --append "$GITHUB_OUTPUT"
+        echo "pr-url=$PR_URL" | tee -a "$GITHUB_OUTPUT"
 
     - name: Merge PR
       run: |

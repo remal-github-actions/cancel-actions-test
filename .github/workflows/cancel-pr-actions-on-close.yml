@@ -3,7 +3,7 @@ name: Cancel PR actions on merge
 on:
   pull_request:
     types:
-    - merged
+    - closed
 
 permissions:
   pull-requests: 'read'
