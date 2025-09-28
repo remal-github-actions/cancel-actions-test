@@ -16,6 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 300
     steps:
+    - name: Dump github context
+      env: { CONTEXT: "${{toJson(github)}}" }
+      run: echo "$CONTEXT"
+
     - run: sleep 6s
     - run: sleep 6s
     - run: sleep 6s
