@@ -18,7 +18,7 @@ env:
   GH_TOKEN: ${{secrets.PUSH_BACK_TOKEN}}
 
 jobs:
-  test-pr:
+  test-pr-merge:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
