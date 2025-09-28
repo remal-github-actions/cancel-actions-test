@@ -10,13 +10,6 @@ outputs:
 runs:
   using: composite
   steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
-    with:
-      submodules: recursive
-      lfs: true
-      fetch-depth: 1
-
   - name: Create content
     id: content
     shell: bash
