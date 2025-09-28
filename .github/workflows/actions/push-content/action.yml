@@ -1,6 +1,8 @@
 inputs:
   githubToken:
     required: true
+  scope:
+    required: true
 
 outputs:
   branch:
@@ -15,7 +17,7 @@ runs:
     shell: bash
     run: |
       DATE_STRING="$(date --utc '+%Y-%m-%d %H:%M:%S')"
-      MESSAGE="$DATE_STRING $RANDOM"
+      MESSAGE="${{inputs.scope}} $DATE_STRING $RANDOM"
       echo "message=$MESSAGE" | tee -a "$GITHUB_OUTPUT"
 
       TOKEN="${MESSAGE//:/-}"
@@ -27,7 +29,7 @@ runs:
       git checkout -b "$BRANCH"
 
       mkdir -p triggers
-      echo "$DATE_STRING" > "triggers/$TOKEN"
+      echo "$MESSAGE" > "triggers/$TOKEN"
 
   - name: Commit and Push
     uses: remal-github-actions/push-back@v1

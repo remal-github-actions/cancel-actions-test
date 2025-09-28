@@ -31,6 +31,7 @@ jobs:
       uses: ./.github/workflows/actions/push-content
       with:
         githubToken: ${{env.GH_TOKEN}}
+        scope: pr
 
     - name: Create PR
       id: create-pr
@@ -63,6 +64,7 @@ jobs:
       uses: ./.github/workflows/actions/push-content
       with:
         githubToken: ${{env.GH_TOKEN}}
+        scope: branch
 
     - name: Remove branch
       run: |
