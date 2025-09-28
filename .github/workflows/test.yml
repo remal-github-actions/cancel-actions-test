@@ -49,3 +49,41 @@ jobs:
     - name: Merge PR
       run: |
         gh pr merge "${{steps.create-pr.outputs.pr-url}}" --squash --delete-branch
+
+  test-branch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - name: Create and push content
+      id: content
+      uses: ./.github/workflows/actions/push-content
+      with:
+        githubToken: ${{env.GH_TOKEN}}
+
+    - name: Remove branch
+      run: |
+        git push origin --delete "${{steps.content.outputs.branch}}"
+
+  cleanup:
+    needs:
+    - test-pr
+    - test-branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - name: Cleanup
+      run: |
+        rm -rf triggers
+    - name: Commit and Push
+      uses: remal-github-actions/push-back@v1
+      with:
+        githubToken: ${{env.GH_TOKEN}}
+        message: 'Cleanup after tests'
