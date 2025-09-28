@@ -1,7 +1,7 @@
 on:
   delete:
-    types:
-    - tag
+    tags:
+    - '*'
 
 permissions:
   checks: 'read'

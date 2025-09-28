@@ -1,7 +1,7 @@
 on:
   delete:
-    types:
-    - branch
+    branches:
+    - '*'
 
 permissions:
   checks: 'read'
