@@ -1,5 +1,5 @@
 inputs:
-  githubToken:
+  token:
     required: true
   scope:
     required: true
@@ -34,5 +34,5 @@ runs:
   - name: Commit and Push
     uses: remal-github-actions/push-back@v1
     with:
-      githubToken: ${{inputs.githubToken}}
+      githubToken: ${{inputs.token}}
       message: '${{steps.content.outputs.message}}'

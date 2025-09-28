@@ -25,12 +25,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
+        token: ${{env.GH_TOKEN}}
         fetch-depth: 1
     - name: Create and push content
       id: content
       uses: ./.github/workflows/actions/push-content
       with:
-        githubToken: ${{env.GH_TOKEN}}
+        token: ${{env.GH_TOKEN}}
         scope: pr
 
     - name: Create PR
@@ -58,12 +59,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
+        token: ${{env.GH_TOKEN}}
         fetch-depth: 1
     - name: Create and push content
       id: content
       uses: ./.github/workflows/actions/push-content
       with:
-        githubToken: ${{env.GH_TOKEN}}
+        token: ${{env.GH_TOKEN}}
         scope: branch
 
     - name: Remove branch
@@ -80,12 +82,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
+        token: ${{env.GH_TOKEN}}
         fetch-depth: 1
     - name: Pull latest changes
       run: git pull origin main
+
     - name: Cleanup
       run: |
         rm -rf triggers
+
     - name: Commit and Push
       run: |
         if [ -n "$(git status --porcelain)" ]; then
