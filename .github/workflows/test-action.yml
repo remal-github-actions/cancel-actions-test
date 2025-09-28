@@ -2,9 +2,9 @@ on:
   pull_request: { }
   push:
     branches:
-    - 'test-*'
+    - 'test-branch-*'
     tags:
-    - 'test-*'
+    - 'test-tag-*'
 
 defaults:
   run:
