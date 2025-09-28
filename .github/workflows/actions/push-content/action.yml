@@ -19,6 +19,7 @@ runs:
 
       TOKEN="${DATE_STRING//:/-}"
       TOKEN="${TOKEN// /-}"
+      TOKEN="$TOKEN-$RANDOM"
       echo "token=$TOKEN" | tee -a "$GITHUB_OUTPUT"
 
       BRANCH="test-$TOKEN"
