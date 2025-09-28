@@ -1,5 +1,3 @@
-name: Cancel PR actions on merge
-
 on:
   pull_request:
     types:
@@ -11,7 +9,7 @@ permissions:
   actions: 'write'
 
 jobs:
-  cancel-pr-actions-on-merge:
+  cancel-pr-actions-on-close:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

@@ -1,15 +1,14 @@
 on:
-  pull_request:
+  delete:
     types:
-    - merged
+    - branch
 
 permissions:
-  pull-requests: 'read'
   checks: 'read'
   actions: 'write'
 
 jobs:
-  cancel-pr-actions-on-merge:
+  cancel-branch-actions-on-delete:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
