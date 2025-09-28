@@ -8,6 +8,7 @@ defaults:
 
 jobs:
   test-action:
+    name: ${{github.event_name}}
     runs-on: ubuntu-latest
     timeout-minutes: 300
     steps:
