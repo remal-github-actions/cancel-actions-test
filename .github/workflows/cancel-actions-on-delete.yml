@@ -1,7 +1,5 @@
 on:
-  delete:
-    branches:
-    - '*'
+  delete: { }
 
 permissions:
   checks: 'read'
