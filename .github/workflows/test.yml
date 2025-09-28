@@ -74,7 +74,7 @@ jobs:
 
   cleanup:
     needs:
-    - test-pr
+    - test-pr-merge
     - test-branch
     runs-on: ubuntu-latest
     timeout-minutes: 5
