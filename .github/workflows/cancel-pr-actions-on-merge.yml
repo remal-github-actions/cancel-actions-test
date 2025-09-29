@@ -18,3 +18,5 @@ jobs:
       run: echo "$CONTEXT"
 
     - uses: remal-github-actions/cancel-actions@v1
+      with:
+        prNumber: ${{github.event.pull_request.number}}
