@@ -1,7 +1,7 @@
 on:
   pull_request:
     types:
-    - merged
+    - opened
 
 permissions:
   pull-requests: 'read'
@@ -9,12 +9,10 @@ permissions:
   actions: 'write'
 
 jobs:
-  cancel-pr-actions-on-merge:
+  cancel-pr-actions-on-opened:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
     - name: Dump github context
       env: { CONTEXT: "${{toJson(github)}}" }
       run: echo "$CONTEXT"
-
-    - uses: remal-github-actions/cancel-actions@v1
