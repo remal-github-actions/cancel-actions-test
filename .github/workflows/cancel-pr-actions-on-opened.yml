@@ -16,3 +16,4 @@ jobs:
     - name: Dump github context
       env: { CONTEXT: "${{toJson(github)}}" }
       run: echo "$CONTEXT"
+
